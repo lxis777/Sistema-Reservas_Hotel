@@ -1,0 +1,145 @@
+@startuml diagrama_er
+' =====================================================================
+'  Diagrama entidad-relación — Sistema de Reservas de Hotel (Proyecto 8)
+'  Coincide con los modelos de Django. Notación pata de gallo (IE).
+'  Convención: tbl_ (tabla), pk_ (llave primaria), fk_ (llave foránea)
+'  y prefijo de tabla en cada columna.
+' =====================================================================
+hide circle
+hide empty members
+skinparam linetype ortho
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ArrowColor #0B3C49
+skinparam class {
+  BorderColor #0B3C49
+  BackgroundColor #FFFFFF
+  HeaderBackgroundColor #0B3C49
+  FontColor #FFFFFF
+  FontStyle bold
+  AttributeFontColor #1E2B2F
+}
+skinparam class<<debil>> {
+  BorderColor #D1603D
+  BorderThickness 3
+}
+skinparam class<<django>> {
+  BorderColor #6B7A7F
+  HeaderBackgroundColor #6B7A7F
+}
+
+title Diagrama entidad-relación — Sistema de Reservas de Hotel (Proyecto 8)
+
+entity "auth_user" as auth_user <<django>> {
+  * id : INTEGER <<PK>>
+  --
+  * username : VARCHAR(150) <<UQ>>
+  * password : VARCHAR(128)
+  first_name : VARCHAR(150)
+  last_name : VARCHAR(150)
+  email : VARCHAR(254)
+  * is_superuser : BOOL
+  * is_active : BOOL
+}
+
+entity "tbl_perfil" as perfil {
+  * pk_per_id : BIGINT <<PK>>
+  --
+  * fk_per_usuario : INTEGER <<FK>> <<UQ>>
+  * per_rol : VARCHAR(20)
+  fk_per_huesped : BIGINT <<FK>> <<UQ>> NULL
+}
+
+entity "tbl_tipo_habitacion" as tipo {
+  * pk_tip_id : BIGINT <<PK>>
+  --
+  * tip_nombre : VARCHAR(80) <<UQ>>
+  tip_descripcion : TEXT
+  * tip_capacidad : SMALLINT
+  * tip_precio_noche : DECIMAL(10,2)
+  * tip_activo : BOOL
+}
+
+entity "tbl_habitacion" as habitacion {
+  * pk_hab_id : BIGINT <<PK>>
+  --
+  * hab_numero : VARCHAR(10) <<UQ>>
+  * hab_piso : SMALLINT
+  * hab_estado : VARCHAR(20)
+  * fk_hab_tipo : BIGINT <<FK>>
+}
+
+entity "tbl_huesped" as huesped {
+  * pk_hue_id : BIGINT <<PK>>
+  --
+  * hue_documento : VARCHAR(30) <<UQ>>
+  * hue_nombres : VARCHAR(100)
+  * hue_apellidos : VARCHAR(100)
+  hue_correo : VARCHAR(254)
+  hue_telefono : VARCHAR(25)
+  * hue_fecha_registro : DATE
+}
+
+entity "tbl_reserva" as reserva {
+  * pk_res_id : BIGINT <<PK>>
+  --
+  * res_codigo : VARCHAR(20) <<UQ>>
+  * fk_res_huesped : BIGINT <<FK>>
+  * fk_res_habitacion : BIGINT <<FK>>
+  * res_fecha_reserva : DATE
+  * res_fecha_entrada : DATE
+  * res_fecha_salida : DATE
+  * res_estado : VARCHAR(20)
+  res_observaciones : TEXT
+}
+
+entity "tbl_servicio" as servicio {
+  * pk_ser_id : BIGINT <<PK>>
+  --
+  * ser_nombre : VARCHAR(80) <<UQ>>
+  ser_descripcion : TEXT
+  * ser_precio_unitario : DECIMAL(10,2)
+  * ser_activo : BOOL
+}
+
+entity "tbl_consumo_servicio" as consumo <<debil>> {
+  * pk_con_id : BIGINT <<PK>>
+  --
+  * fk_con_reserva : BIGINT <<FK>>
+  * fk_con_servicio : BIGINT <<FK>>
+  * con_cantidad : INTEGER
+  * con_valor_unitario : DECIMAL(10,2)
+  * con_fecha : DATE
+  con_observacion : VARCHAR(200)
+  ..
+  UQ (fk_con_reserva, fk_con_servicio, con_fecha)
+}
+
+' ----------------------------- Relaciones -----------------------------
+auth_user ||--|| perfil : "1:1 tiene"
+huesped ||--o| perfil : "1:0..1 cuenta"
+tipo ||--o{ habitacion : "1:N clasifica"
+huesped ||--o{ reserva : "1:N realiza"
+habitacion ||--o{ reserva : "1:N se asigna"
+reserva ||--o{ consumo : "1:N registra"
+servicio ||--o{ consumo : "1:N se consume"
+
+note bottom of consumo
+  <b>Entidad débil</b>: depende de tbl_reserva
+  (ON DELETE CASCADE).
+  <b>Tabla intermedia</b> que resuelve la relación
+  <b>N:M</b> tbl_reserva <-> tbl_servicio.
+end note
+
+note right of auth_user
+  Tabla propia de Django
+  (django.contrib.auth).
+end note
+
+legend right
+  <b>PK</b> llave primaria (pk_)   <b>FK</b> llave foránea (fk_)   <b>UQ</b> valor único
+  <b>*</b> campo obligatorio (NOT NULL)
+  ||--o{  uno a muchos (1:N)
+  ||--o|  uno a cero o uno (1:0..1)
+endlegend
+@enduml

@@ -1,0 +1,149 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Inicio{% endblock %} · Hotel Brisas de La Guajira</title>
+  <!-- Framework CSS: Bootstrap 5.3 + Bootstrap Icons incluidos por CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="{% static 'css/estilos.css' %}" rel="stylesheet">
+  <link rel="icon" href="{% static 'img/logo.svg' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  {# ---------------------------------------------------------- NAVBAR #}
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-hotel sticky-top shadow-sm">
+    <div class="container-fluid px-3 px-lg-4">
+      {% if user.is_authenticated %}
+      <button class="btn btn-link text-white d-lg-none me-2 p-0" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#menuLateral" aria-label="Abrir menú"><i class="bi bi-list fs-3"></i></button>
+      {% endif %}
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'panel:inicio' %}">
+        <img src="{% static 'img/logo.svg' %}" alt="" width="34" height="34">
+        <span class="lh-1"><span class="fw-semibold font-titulo">Brisas de La Guajira</span><br>
+          <small class="text-arena">Sistema de reservas</small></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrincipal"
+              aria-controls="navPrincipal" aria-expanded="false" aria-label="Mostrar navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navPrincipal">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          {% if user.is_authenticated %}
+            {% if es_personal %}
+            <li class="nav-item"><a class="btn btn-arena btn-sm my-2 my-lg-0" href="{% url 'reservas:crear' %}">
+              <i class="bi bi-plus-lg"></i> Nueva reserva</a></li>
+            {% elif es_huesped %}
+            <li class="nav-item"><a class="btn btn-arena btn-sm my-2 my-lg-0" href="{% url 'reservas:solicitar' %}">
+              <i class="bi bi-calendar-plus"></i> Solicitar reserva</a></li>
+            {% endif %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button"
+                 data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar">{{ user.username|first|upper }}</span>
+                <span>{{ user.get_full_name|default:user.username }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><span class="dropdown-item-text small text-muted">Rol:
+                  <span class="badge badge-rol">{{ rol_usuario|default:"sin rol"|capfirst }}</span></span></li>
+                {% if es_admin %}
+                <li><a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank">
+                  <i class="bi bi-gear"></i> Panel de administración</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="post" action="{% url 'usuarios:logout' %}">{% csrf_token %}
+                    <button class="dropdown-item text-danger" type="submit"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+                  </form>
+                </li>
+              </ul>
+            </li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'usuarios:login' %}"><i class="bi bi-box-arrow-in-right"></i> Ingresar</a></li>
+            <li class="nav-item"><a class="btn btn-arena btn-sm" href="{% url 'usuarios:registro' %}">Crear cuenta</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="d-flex flex-grow-1">
+    {# ---------------------------------------------------------- ASIDE (menú lateral) #}
+    {% if user.is_authenticated and rol_usuario %}
+    <aside class="offcanvas-lg offcanvas-start aside-hotel" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralLabel">
+      <div class="offcanvas-header d-lg-none">
+        <h5 class="offcanvas-title" id="menuLateralLabel">Menú</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#menuLateral" aria-label="Cerrar"></button>
+      </div>
+      <div class="offcanvas-body d-block p-3">
+        {% with ruta=request.resolver_match.namespace %}
+        <p class="aside-titulo">General</p>
+        <nav class="nav flex-column">
+          <a class="nav-link {% if ruta == 'panel' and request.resolver_match.url_name == 'inicio' %}active{% endif %}" href="{% url 'panel:inicio' %}">
+            <i class="bi bi-speedometer2"></i> {% if es_huesped %}Mi panel{% else %}Tablero{% endif %}</a>
+          <a class="nav-link {% if ruta == 'reservas' %}active{% endif %}" href="{% url 'reservas:lista' %}">
+            <i class="bi bi-journal-bookmark"></i> {% if es_huesped %}Mis reservas{% else %}Reservas{% endif %}</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'disponibilidad' %}active{% endif %}" href="{% url 'habitaciones:disponibilidad' %}">
+            <i class="bi bi-calendar-check"></i> Disponibilidad</a>
+        </nav>
+        {% if es_personal %}
+        <p class="aside-titulo">Recepción</p>
+        <nav class="nav flex-column">
+          <a class="nav-link {% if ruta == 'huespedes' %}active{% endif %}" href="{% url 'huespedes:lista' %}"><i class="bi bi-people"></i> Huéspedes</a>
+          <a class="nav-link {% if ruta == 'habitaciones' and request.resolver_match.url_name != 'disponibilidad' %}active{% endif %}" href="{% url 'habitaciones:lista' %}"><i class="bi bi-door-closed"></i> Habitaciones</a>
+          <a class="nav-link {% if ruta == 'servicios' %}active{% endif %}" href="{% url 'servicios:lista' %}"><i class="bi bi-cup-hot"></i> Servicios</a>
+        </nav>
+        {% endif %}
+        {% if es_admin %}
+        <p class="aside-titulo">Administración</p>
+        <nav class="nav flex-column">
+          <a class="nav-link {% if ruta == 'tipos' %}active{% endif %}" href="{% url 'tipos:lista' %}"><i class="bi bi-grid-3x3-gap"></i> Tipos de habitación</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'reportes' %}active{% endif %}" href="{% url 'panel:reportes' %}"><i class="bi bi-bar-chart-line"></i> Reportes</a>
+          <a class="nav-link" href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-shield-lock"></i> Usuarios (admin)</a>
+        </nav>
+        {% endif %}
+        {% endwith %}
+      </div>
+    </aside>
+    {% endif %}
+
+    {# ---------------------------------------------------------- CONTENIDO #}
+    <main class="flex-grow-1 p-3 p-lg-4 contenido">
+      {% if messages %}
+      <div class="mensajes">
+        {% for m in messages %}
+        <div class="alert alert-{{ m.tags }} alert-dismissible fade show shadow-sm" role="alert">
+          <i class="bi {% if m.tags == 'success' %}bi-check-circle{% elif m.tags == 'danger' %}bi-x-octagon{% elif m.tags == 'warning' %}bi-exclamation-triangle{% else %}bi-info-circle{% endif %} me-1"></i>
+          {{ m }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% block encabezado %}{% endblock %}
+      {% block contenido %}{% endblock %}
+    </main>
+  </div>
+
+  {# ---------------------------------------------------------- FOOTER #}
+  <footer class="footer-hotel mt-auto">
+    <div class="container-fluid px-4 py-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <span><i class="bi bi-geo-alt"></i> Hotel Brisas de La Guajira · Riohacha, La Guajira</span>
+      <span class="small">Proyecto 8 · Reservas de Hotel · Django + Bootstrap 5 · {% now "Y" %}</span>
+      <span class="paleta" title="Paleta de colores del sistema">
+        <i style="background:var(--hb-mar)"></i><i style="background:var(--hb-turquesa)"></i><i style="background:var(--hb-arena)"></i><i style="background:var(--hb-atardecer)"></i><i style="background:var(--hb-crema)"></i>
+      </span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

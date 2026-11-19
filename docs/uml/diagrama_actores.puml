@@ -1,0 +1,101 @@
+@startuml diagrama_actores
+' =====================================================================
+'  Diagrama de casos de uso — Sistema de Reservas de Hotel (Proyecto 8)
+'  Hotel Brisas de La Guajira · Tercer corte
+' =====================================================================
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam ArrowColor #0B3C49
+skinparam rectangle {
+  BorderColor #0B3C49
+  BackgroundColor #FCFAF6
+  FontColor #0B3C49
+  FontStyle bold
+}
+skinparam usecase {
+  BorderColor #1A7F86
+  BackgroundColor #E8F3F3
+  FontColor #1E2B2F
+}
+skinparam actor {
+  BorderColor #0B3C49
+  FontColor #0B3C49
+  FontStyle bold
+}
+
+title Diagrama de casos de uso — Sistema de Reservas de Hotel (Proyecto 8)
+
+actor "Administrador" as Admin #E7EEF0
+actor "Recepcionista" as Recep #E8F3F3
+actor "Huésped" as Hue #FBEDE7
+
+rectangle "Sistema de Reservas · Hotel Brisas de La Guajira" {
+
+  ' ---- Administrador ----
+  usecase "Gestionar tipos\nde habitación" as UC01 #E7EEF0
+  usecase "Gestionar\nhabitaciones" as UC02 #E7EEF0
+  usecase "Gestionar\nservicios" as UC03 #E7EEF0
+  usecase "Consultar reportes\ny estadísticas" as UC04 #E7EEF0
+  usecase "Gestionar usuarios y roles\n(panel de administración)" as UC05 #E7EEF0
+
+  ' ---- Recepcionista ----
+  usecase "Gestionar\nhuéspedes" as UC06
+  usecase "Gestionar reservas\n(crear, editar, eliminar)" as UC07
+  usecase "Registrar servicios\nconsumidos" as UC08
+  usecase "Registrar check-in /\ncheck-out" as UC09
+
+  ' ---- Compartidos ----
+  usecase "Consultar disponibilidad\nde habitaciones" as UC10 #FBF0D9
+  usecase "Iniciar / cerrar\nsesión" as UC11 #FBF0D9
+
+  ' ---- Huésped ----
+  usecase "Registrarse en\nel sistema" as UC12 #FBEDE7
+  usecase "Solicitar\nreserva" as UC13 #FBEDE7
+  usecase "Consultar mis\nreservas" as UC14 #FBEDE7
+  usecase "Cancelar reserva\npendiente" as UC15 #FBEDE7
+}
+
+' Generalización: el Administrador hereda los casos de uso del Recepcionista
+Admin -|> Recep
+
+' Asociaciones del Administrador
+Admin -- UC01
+Admin -- UC02
+Admin -- UC03
+Admin -- UC04
+Admin -- UC05
+
+' Asociaciones del Recepcionista
+Recep -- UC06
+Recep -- UC07
+Recep -- UC08
+Recep -- UC09
+Recep -- UC10
+Recep -- UC11
+
+' Asociaciones del Huésped (a la derecha del sistema)
+UC10 -- Hue
+UC11 -- Hue
+UC12 -- Hue
+UC13 -- Hue
+UC14 -- Hue
+UC15 -- Hue
+
+' Relación entre casos de uso
+UC08 .> UC07 : <<extend>>
+
+note right of Admin
+  El Administrador hereda todos
+  los casos de uso del Recepcionista.
+end note
+
+legend right
+  Azul oscuro: casos del Administrador
+  Turquesa: casos del Recepcionista
+  Coral: casos del Huésped
+  Amarillo: casos compartidos
+endlegend
+@enduml

@@ -1,0 +1,140 @@
+/* =========================================================================
+   Hotel Brisas de La Guajira — Paleta de colores y estilos sobre Bootstrap 5
+   Inspirada en el paisaje guajiro: mar Caribe, arena del desierto y atardecer.
+   ========================================================================= */
+:root {
+  --hb-mar:        #0B3C49;  /* primario: azul petróleo del mar Caribe   */
+  --hb-turquesa:   #1A7F86;  /* secundario: turquesa de la costa         */
+  --hb-arena:      #E9B44C;  /* acento: arena dorada del desierto        */
+  --hb-atardecer:  #D1603D;  /* alerta/énfasis: atardecer en el Cabo     */
+  --hb-crema:      #F7F3EC;  /* fondo general                            */
+  --hb-texto:      #1E2B2F;
+  --hb-borde:      #E4DDD0;
+
+  /* Se sobreescriben las variables de Bootstrap para usar la paleta */
+  --bs-primary: var(--hb-mar);
+  --bs-primary-rgb: 11, 60, 73;
+  --bs-link-color: var(--hb-turquesa);
+  --bs-link-color-rgb: 26, 127, 134;
+  --bs-link-hover-color: var(--hb-mar);
+  --bs-body-bg: var(--hb-crema);
+  --bs-body-color: var(--hb-texto);
+  --bs-body-font-family: "Inter", system-ui, sans-serif;
+  --bs-border-color: var(--hb-borde);
+  --bs-success: #2E8B57;  --bs-success-rgb: 46, 139, 87;
+  --bs-warning: var(--hb-arena); --bs-warning-rgb: 233, 180, 76;
+  --bs-danger: #C0392B;  --bs-danger-rgb: 192, 57, 43;
+  --bs-info: var(--hb-turquesa); --bs-info-rgb: 26, 127, 134;
+}
+
+h1, h2, h3, h4, h5, .font-titulo { font-family: "Poppins", sans-serif; }
+.text-arena { color: var(--hb-arena) !important; }
+.text-mar { color: var(--hb-mar) !important; }
+.text-turquesa { color: var(--hb-turquesa) !important; }
+.bg-mar { background: var(--hb-mar) !important; }
+.bg-arena-suave { background: #FBF0D9 !important; }
+
+/* ---------- Navbar ---------- */
+.navbar-hotel { background: linear-gradient(90deg, var(--hb-mar) 0%, #0F4F5E 100%); }
+.navbar-hotel .navbar-brand small { font-size: .72rem; letter-spacing: .04em; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--hb-arena); color: var(--hb-mar);
+          display: inline-grid; place-items: center; font-weight: 700; }
+.badge-rol { background: var(--hb-turquesa); }
+
+/* ---------- Botones ---------- */
+.btn-primary { --bs-btn-bg: var(--hb-mar); --bs-btn-border-color: var(--hb-mar);
+  --bs-btn-hover-bg: #082E38; --bs-btn-hover-border-color: #082E38; --bs-btn-active-bg: #072630; }
+.btn-outline-primary { --bs-btn-color: var(--hb-mar); --bs-btn-border-color: var(--hb-mar);
+  --bs-btn-hover-bg: var(--hb-mar); --bs-btn-hover-border-color: var(--hb-mar); }
+.btn-turquesa { --bs-btn-color: #fff; --bs-btn-bg: var(--hb-turquesa); --bs-btn-border-color: var(--hb-turquesa);
+  --bs-btn-hover-color: #fff; --bs-btn-hover-bg: #146A70; --bs-btn-hover-border-color: #146A70; }
+.btn-arena { --bs-btn-color: var(--hb-mar); --bs-btn-bg: var(--hb-arena); --bs-btn-border-color: var(--hb-arena);
+  --bs-btn-hover-color: var(--hb-mar); --bs-btn-hover-bg: #DFA334; --bs-btn-hover-border-color: #DFA334; font-weight: 600; }
+.btn-atardecer { --bs-btn-color: #fff; --bs-btn-bg: var(--hb-atardecer); --bs-btn-border-color: var(--hb-atardecer);
+  --bs-btn-hover-color: #fff; --bs-btn-hover-bg: #B44F30; --bs-btn-hover-border-color: #B44F30; }
+
+/* ---------- Aside ---------- */
+.aside-hotel { --bs-offcanvas-width: 250px; --bs-offcanvas-bg: #fff; }
+@media (min-width: 992px) {
+  .aside-hotel { width: 250px; flex-shrink: 0; background: #fff; border-right: 1px solid var(--hb-borde);
+                 position: sticky; top: 62px; height: calc(100vh - 62px); overflow-y: auto; }
+}
+@media (max-width: 991.98px) {
+  .aside-hotel .offcanvas-header { background: var(--hb-mar); color: #fff; }
+}
+.aside-titulo { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: #8A9599;
+                margin: 1.2rem .75rem .4rem; font-weight: 600; }
+.aside-titulo:first-child { margin-top: .25rem; }
+.aside-hotel .nav-link { color: var(--hb-texto); border-radius: .6rem; padding: .55rem .75rem;
+                         display: flex; gap: .65rem; align-items: center; font-weight: 500; }
+.aside-hotel .nav-link i { color: var(--hb-turquesa); font-size: 1.05rem; }
+.aside-hotel .nav-link:hover { background: var(--hb-crema); }
+.aside-hotel .nav-link.active { background: var(--hb-mar); color: #fff; }
+.aside-hotel .nav-link.active i { color: var(--hb-arena); }
+
+/* ---------- Contenido ---------- */
+.contenido { min-width: 0; }
+.encabezado-pagina { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.encabezado-pagina h1 { font-size: 1.55rem; margin: 0; color: var(--hb-mar); }
+.encabezado-pagina .migas { font-size: .85rem; color: #6B7A7F; }
+.card { border: 1px solid var(--hb-borde); border-radius: 1rem; box-shadow: 0 2px 10px rgba(11,60,73,.05); }
+.card-header { background: #fff; border-bottom: 1px solid var(--hb-borde); border-radius: 1rem 1rem 0 0 !important;
+               font-family: "Poppins", sans-serif; font-weight: 600; color: var(--hb-mar); }
+.card-header.bg-mar { color: #fff; }
+
+/* KPIs */
+.kpi { position: relative; overflow: hidden; }
+.kpi-icono { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; }
+.kpi .kpi-valor { font-family: "Poppins", sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--hb-mar); line-height: 1.1; }
+.kpi .kpi-etiqueta { font-size: .82rem; color: #6B7A7F; }
+.ico-mar { background: rgba(11,60,73,.1); color: var(--hb-mar); }
+.ico-turquesa { background: rgba(26,127,134,.12); color: var(--hb-turquesa); }
+.ico-arena { background: rgba(233,180,76,.2); color: #A97A1C; }
+.ico-atardecer { background: rgba(209,96,61,.14); color: var(--hb-atardecer); }
+
+/* Tablas */
+.table-hotel { --bs-table-bg: transparent; margin: 0; }
+.table-hotel thead th { background: var(--hb-crema); color: var(--hb-mar); font-size: .78rem; text-transform: uppercase;
+                        letter-spacing: .05em; border-bottom: 2px solid var(--hb-borde); white-space: nowrap; }
+.table-hotel td { vertical-align: middle; }
+.table-hotel tbody tr:hover { background: #FCFAF6; }
+.codigo { font-family: ui-monospace, "Cascadia Code", monospace; font-weight: 600; color: var(--hb-mar); text-decoration: none; }
+a.codigo:hover { color: var(--hb-turquesa); text-decoration: underline; }
+
+/* Badges de estado */
+.text-bg-warning { color: #5A4310 !important; }
+
+/* Mapa de habitaciones */
+.mapa-hab { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .5rem; }
+.hab-celda { border-radius: .7rem; padding: .5rem; text-align: center; font-size: .78rem; border: 1px solid transparent; }
+.hab-celda strong { display: block; font-size: 1.05rem; font-family: "Poppins", sans-serif; }
+.hab-disponible { background: rgba(46,139,87,.12); color: #1F6B42; border-color: rgba(46,139,87,.3); }
+.hab-ocupada { background: rgba(209,96,61,.13); color: #9C3F22; border-color: rgba(209,96,61,.35); }
+.hab-mantenimiento { background: #ECEAE6; color: #6B6B6B; border-color: #D8D4CC; }
+
+/* Barras de reportes */
+.barra { height: 10px; border-radius: 6px; background: #EFE9DE; overflow: hidden; }
+.barra > span { display: block; height: 100%; background: linear-gradient(90deg, var(--hb-turquesa), var(--hb-mar)); border-radius: 6px; }
+.barra.arena > span { background: linear-gradient(90deg, var(--hb-arena), var(--hb-atardecer)); }
+
+/* Formularios */
+.form-control:focus, .form-select:focus { border-color: var(--hb-turquesa); box-shadow: 0 0 0 .2rem rgba(26,127,134,.18); }
+.form-label { font-weight: 500; font-size: .9rem; color: var(--hb-mar); }
+.fila-consumo.marcada-eliminar { opacity: .45; text-decoration: line-through; }
+.resumen-total { background: var(--hb-mar); color: #fff; border-radius: 1rem; }
+.resumen-total .valor { font-family: "Poppins", sans-serif; font-size: 1.6rem; color: var(--hb-arena); }
+
+/* Portada pública */
+.hero { background: linear-gradient(135deg, rgba(11,60,73,.94), rgba(26,127,134,.88)), url("../img/olas.svg") bottom/cover no-repeat;
+        color: #fff; border-radius: 1.25rem; }
+.hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); }
+.login-caja { max-width: 430px; }
+.login-lado { background: linear-gradient(160deg, var(--hb-mar), var(--hb-turquesa)); color: #fff; }
+
+/* Footer */
+.footer-hotel { background: var(--hb-mar); color: rgba(255,255,255,.82); font-size: .88rem; }
+.paleta i { display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-left: 4px; border: 2px solid rgba(255,255,255,.6); }
+
+.mensajes .alert { border-radius: .8rem; }
+.vacio { padding: 2.5rem 1rem; text-align: center; color: #7B888C; }
+.vacio i { font-size: 2.5rem; color: var(--hb-arena); display: block; margin-bottom: .5rem; }

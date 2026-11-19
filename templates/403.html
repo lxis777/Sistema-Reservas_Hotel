@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Acceso denegado{% endblock %}
+{% block contenido %}
+<div class="vacio mt-5"><i class="bi bi-shield-lock"></i>
+  <h1 class="h3 text-mar">Acceso denegado</h1>
+  <p>Tu rol no tiene permiso para ver esta página.</p>
+  <a class="btn btn-primary" href="{% url 'panel:inicio' %}">Volver al inicio</a>
+</div>
+{% endblock %}
